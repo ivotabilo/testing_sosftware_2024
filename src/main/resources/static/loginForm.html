@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="/cssLogin.css">
+    <title>Entrada de Usuario</title>
+</head>
+
+<body id="conteudo">
+    <div class="screen">
+        <form id="form-Login">
+            <div class="headLogin" style="background-color: #58b747;">
+                <img src="src\imgs\Hotpot-removebg-preview.png" title="LogoERP">
+            </div>
+            <div id="bodyCadastro">
+                <h3>Login</h3>
+
+                <label for="usuario">Usuario</label>
+                <input type="text" id="usuario" name="usuario" required placeholder="Usuario o Email"><br>
+
+                <label for="senha">Contraseña</label>
+                <input type="password" id="senha" name="senha" placeholder="Contraseña" required><br>
+
+                <a href="LINK PARA API RESET DE SENHA">Olvide mi contraseña</a>
+
+                <button type="submit">Entrar</button><br>
+
+                <div class="footerLogin">
+                    <span>No tienes una cuenta?</span>
+                    <a href="/registrarForm.html">Crearla</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+
+<script>
+    const formLogin = document.getElementById("form-Login")
+
+
+    formLogin.addEventListener("submit", (evento) => {
+
+        evento.preventDefault()
+
+        const data = {
+            "username": document.getElementById("usuario").value,
+            "senha": document.getElementById("senha").value
+        }
+
+        console.log(data)
+
+
+        fetch("http://localhost:8090/login", {
+
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+
+            body: JSON.stringify(data)
+
+        }).then(response => {
+            if (response.status == 200 /*OK*/) {
+                alert("Entrada exitosa!")
+            } else if (response.status == 401 /*Unauthorized*/) {
+                alert("Credenciales no válidas!")
+            } else if (response.status == 404 /*Not Found*/) {
+                alert("Usuario no encontrado!")
+            } else {
+                console.log(response)
+                alert("Ha ocurrido un fallo")
+            }
+        }).catch(e => {
+            alert("Error:", e.toString())
+        })
+
+
+    })
+
+
+
+
+</script>
+<script registro>
+
+  /*  const trocarConteudo = document.querySelectorAll('a')
+
+    trocarConteudo.forEach(link => {
+        
+
+        link.addEventListener('click', (e) => {
+
+            e.preventDefault()
+
+            const conteudo = document.getElementById('conteudo')
+
+            console.log(link)
+            
+            fetch(link.href)
+                .then(resp => resp.text())
+                .then(html => conteudo.innerHTML = html)
+                .catch(e)
+
+        })
+    })*/
+
+</script>
+
+</html>
