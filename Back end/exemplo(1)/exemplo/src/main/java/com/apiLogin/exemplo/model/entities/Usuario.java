@@ -29,7 +29,8 @@ public class Usuario {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Usuario usuario)) return false;
-        return Objects.equals(getSenha(), usuario.getSenha());
+        return Objects.equals(username, usuario.username) &&
+               Objects.equals(email, usuario.email);
     }
 
 

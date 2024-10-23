@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,44 +19,63 @@ import java.util.Optional;
 @RestController
 public class UsuarioController {
 
+
     @Autowired
     UsuarioRepository usuarioRepository;
-
-    @PostMapping(value = "/login")
-    public ResponseEntity loginUsuario(@RequestBody Usuario usuarioRequest){
-
-//        EXEMPLO REQUEST USUARIO
-//        {
-//            "username": "teste@gmail.com",
-//                "senha": "exemplo123"
-//        }
-
-        try {
-
-            Optional<Usuario> usuario = usuarioRepository.findByEmailOrUsername(usuarioRequest.getUsername(), usuarioRequest.getUsername());
-
-
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Access-Control-Allow-Origin", "*");
-
-
-            if(usuario.isPresent()){
-
-                if(usuario.get().equals(usuarioRequest)){
-                    return ResponseEntity.ok().headers(headers).build();
-                }else{
-                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).headers(headers).build();
-                }
-
-            }else{
-                return ResponseEntity.notFound().headers(headers).build();
-            }
-
-        }catch (Exception e){
-            throw e;
-        }
-
-
+    /* 
+      @GetMapping("/login")
+    public String loginPage() {
+        return "redirect:/loginForm.html"; // Redirige a la página estática
     }
+    */
+   
+    
+
+    @PostMapping(value = "/register")
+    public ResponseEntity<Usuario> registerUsuario(@RequestBody Usuario usuarioRequest) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Access-Control-Allow-Origin", "*");
+    
+        // Verifica si el usuario ya existe
+        if (usuarioRepository.findByEmailOrUsername(usuarioRequest.getEmail(), usuarioRequest.getUsername()).isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).headers(headers).build(); // Conflicto
+        }
+    
+        // Guarda el nuevo usuario
+        try {
+            Usuario newUser = usuarioRepository.save(usuarioRequest);
+            return ResponseEntity.status(HttpStatus.CREATED).headers(headers).body(newUser); // 201 Created
+        } catch (Exception e) {
+            e.printStackTrace(); // Log del error
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(headers).build(); // Manejo de errores
+        }
+    }
+    
+    @PostMapping(value = "/login")
+    public ResponseEntity loginUsuario(@RequestBody Usuario usuarioRequest) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Access-Control-Allow-Origin", "*");
+    
+        try {
+            // Buscar el usuario por nombre de usuario o correo electrónico
+            Optional<Usuario> usuario = usuarioRepository.findByEmailOrUsername(usuarioRequest.getUsername(), usuarioRequest.getUsername());
+    
+            if (usuario.isPresent()) {
+                // Comparar la contraseña
+                if (usuario.get().getSenha().equals(usuarioRequest.getSenha())) {
+                    return ResponseEntity.ok().headers(headers).build(); // Autenticación exitosa
+                } else {
+                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).headers(headers).build(); // Contraseña incorrecta
+                }
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).headers(headers).build(); // Usuario no encontrado
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); // Log del error
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(headers).build(); // Manejo de errores
+        }
+    }
+    
+    
 
 }

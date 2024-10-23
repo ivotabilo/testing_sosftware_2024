@@ -7,7 +7,7 @@
         content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="/cssLogin.css">
-    <title>Entrada do usuário</title>
+    <title>Entrada de Usuario</title>
 </head>
 
 <body id="conteudo">
@@ -19,19 +19,19 @@
             <div id="bodyCadastro">
                 <h3>Login</h3>
 
-                <label for="usuario">Usuário</label>
-                <input type="text" id="usuario" name="usuario" required placeholder="Usuário ou Email"><br>
+                <label for="usuario">Usuario</label>
+                <input type="text" id="usuario" name="usuario" required placeholder="Usuario o Email"><br>
 
-                <label for="senha">Senha</label>
-                <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required><br>
+                <label for="senha">Contraseña</label>
+                <input type="password" id="senha" name="senha" placeholder="Contraseña" required><br>
 
-                <a href="LINK PARA API RESET DE SENHA">Esqueci minha senha</a>
+                <a href="LINK PARA API RESET DE SENHA">Olvide mi contraseña</a>
 
                 <button type="submit">Entrar</button><br>
 
                 <div class="footerLogin">
-                    <span>Não possui uma conta?</span>
-                    <a href="/registrarForm.html">Crie uma</a>
+                    <span>No tienes una cuenta?</span>
+                    <a href="/registrarForm.html">Crearla</a>
                 </div>
             </div>
         </form>
@@ -65,17 +65,17 @@
 
         }).then(response => {
             if (response.status == 200 /*OK*/) {
-                alert("Entrada com sucesso!")
+                alert("Entrada exitosa!")
             } else if (response.status == 401 /*Unauthorized*/) {
-                alert("Credenciais inválidas!")
+                alert("Credenciales no válidas!")
             } else if (response.status == 404 /*Not Found*/) {
-                alert("Usuário não encontrado!")
+                alert("Usuario no encontrado!")
             } else {
                 console.log(response)
-                alert("Ocorreu uma falha")
+                alert("Ha ocurrido un fallo")
             }
         }).catch(e => {
-            alert("Erro:", e.toString())
+            alert("Error:", e.toString())
         })
 
 
